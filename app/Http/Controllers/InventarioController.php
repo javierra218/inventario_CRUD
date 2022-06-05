@@ -29,9 +29,7 @@ class InventarioController extends Controller
     public function create()
     {
         //
-        
         return view('inventario.create');
-        
     }
 
     /**
@@ -102,12 +100,10 @@ class InventarioController extends Controller
     public function update(Request $request,  $id)
     {
         //
-
         $campos=[
             'Componente'=>'required|string|max:100',
             'Producto'=>'required|string|max:100',
             'Precio'=>'required|numeric',
-            
         ];
 
         $mensaje=[
@@ -117,16 +113,10 @@ class InventarioController extends Controller
 
         if($request->hasFile('Foto')){
             $campos=['Foto'=>'required|mimes:jpeg,png,jpg,gif,svg|max:10000',];
-            $mensaje=[
-                'Foto.require' => 'La Foto es requerida',
-            ];
+            $mensaje=['Foto.require' => 'La Foto es requerida',];
         }
 
-
-
         $this->validate($request,$campos,$mensaje);
-
-
 
         $datosInventario=request()->except(['_token','_method']); //para evitar que se envie el token y el metodo
 
@@ -135,18 +125,12 @@ class InventarioController extends Controller
             Storage::delete('public/'.$inventario->Foto); //borrar la foto anterior 
             $datosInventario['Foto'] = $request->file('Foto')->store('uploads', 'public'); //para guardar la foto en la carpeta public/uploads
         }
-
-
-
-
+        
         Inventario::where('id', $id)->update($datosInventario); //actualizar datos en la tabla inventario   
 
         $inventario=Inventario::findOrFail($id); //buscar el registro en la tabla inventario
         //return view('inventario.edit', compact('inventario')); //devolver la vista edit con los datos del registro
         return redirect('inventario') -> with('Mensaje', 'Item actualizado con exito'); //Para retornar a la pagina principal
-
-
-
     }
 
     /**
